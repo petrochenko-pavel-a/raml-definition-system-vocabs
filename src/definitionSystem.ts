@@ -76,7 +76,7 @@ export class SourceProvider {
     }
 }
 
-export function isSourceProvider(object : any) : object is SourceProvider {
+export function isSourceProvider(object : any) : boolean  {
     return object.getSource && typeof(object.getSource) == "function";
 }
 
@@ -161,6 +161,19 @@ export class NodeClass extends typeSystem.StructuredType implements IType,typeSy
         }
 
         return false;
+    }
+    _extras:any={};
+
+    getExtra(n:string){
+        var rs= super.getExtra(n);
+        if (!rs){
+            rs=this._extras[n];
+        }
+        return rs;
+    }
+    putExtra(n:string,v:any){
+        this._extras[n]=v;
+        super.putExtra(n,v);
     }
 
     public getClassIdentifier() : string[] {
@@ -531,7 +544,9 @@ export class Property extends typeSystem.Property implements typeSystem.IPropert
         if (this._enumOptions && typeof this._enumOptions == 'string') {
             return [this._enumOptions + ""];
         }
-
+        if (this.range().getExtra("enum")){
+            return this.range().getExtra("enum");
+        }
         return this._enumOptions;
     }
 
@@ -731,7 +746,9 @@ export class Property extends typeSystem.Property implements typeSystem.IPropert
         return null
     }
 }
-export type Array= typeSystem.Array
+export import Array= typeSystem.Array
+export import Union= typeSystem.Union
+
 export class UserDefinedProp extends Property{
 
     private _node: IParseResult;
@@ -1301,6 +1318,12 @@ export interface UniverseProvider{
 
     clean()
 }
+export function registerRAMLDialect(name:string,version:string):Universe{
+    var u=new Universe({},"Async",getUniverse("RAML10"),"RAML10")
+    universes[name+version]=u;
+    return u;
+}
+
 export var getUniverse:UniverseProvider = (()=>{
 
     var x:any = (key:string)=>{
@@ -1308,11 +1331,19 @@ export var getUniverse:UniverseProvider = (()=>{
         if(universes[key]){
             return universes[key];
         }
+        let key1=key;
+        if (key=="Async0.1"){
+            key1="RAML10";
 
-        var src = jsonDefinitions[key];
+            //should we actually mock key
+        }
+        var src = jsonDefinitions[key1];
+        if (src==null){
+            console.log("Unknown def system:"+key1);
+        }
         var universe = ts2def.toDefSystem(src,(key=="RAML08")?unDesc["Universe08"]:unDesc["Universe10"]);
         if(universe) {
-            universe.setUniverseVersion(key);
+            universe.setUniverseVersion(key1);
             universes[key] = universe;
         }
         return universe;
