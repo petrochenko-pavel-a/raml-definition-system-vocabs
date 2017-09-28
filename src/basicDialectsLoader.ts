@@ -64,7 +64,7 @@ class DialectCreator{
                     var range = this.parseUnion(rng, p);
                 }
                 else {
-                    const __ret = this.parseRange(rng, p);
+                    const __ret = this.parseRange(<string>rng, p);
                     rng = __ret.rng;
                     var range = __ret.range;
                 }
@@ -121,6 +121,9 @@ class DialectCreator{
 }
 
 export function init(){
-    loadDialect(path.resolve(__dirname,"../dialects/validation_dialect.raml"))
+    fs.readdirSync(path.resolve(__dirname,"../dialects/")).forEach(f=>{
+        loadDialect(path.resolve(__dirname,"../dialects/"+f))
+    })
+
 }
 
