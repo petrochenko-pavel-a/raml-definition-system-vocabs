@@ -1303,6 +1303,8 @@ export class RAMLService {
     }
 }
 var universes:{[key:string]:Universe}={}
+var customUniverses:{[key:string]:Universe}={}
+
 
 var ramlDS=require("./index")
 
@@ -1324,10 +1326,24 @@ export function registerRAMLDialect(name:string,version:string):Universe{
     return u;
 }
 
+export function registerUniverse(key:string,u:Universe){
+    customUniverses[key]=u;
+}
+
+export function knows(s:string):boolean{
+    var firstLine = s.split('\n')[0];
+    if (customUniverses[firstLine.trim()]){
+        return true;
+    }
+    return false;
+}
+
 export var getUniverse:UniverseProvider = (()=>{
 
     var x:any = (key:string)=>{
-
+        if(customUniverses[key]){
+            return customUniverses[key];
+        }
         if(universes[key]){
             return universes[key];
         }
@@ -1351,3 +1367,6 @@ export var getUniverse:UniverseProvider = (()=>{
     x.availableUniverses = function(){return Object.keys(jsonDefinitions)}
     return x;
 })();
+
+export import dl=require("./basicDialectsLoader")
+dl.init()

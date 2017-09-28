@@ -1,5 +1,4 @@
 import ts=require("ts-structure-parser")
-
 export interface JSONDump{
     RAML08:ts.Module,
     RAML10:ts.Module
