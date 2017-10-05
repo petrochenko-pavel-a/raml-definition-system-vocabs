@@ -147,19 +147,23 @@ nodeMappings:
       violation:
         propertyTerm: validation.setSeverityViolation
         range: string
+        reference: []
         allowMultiple: true
       info:
         propertyTerm: validation.setSeverityInfo
         range: string
         allowMultiple: true
+        reference: [shapeValidationNode, queryValidationNode,functionValidationNode]
       warning:
         propertyTerm: validation.setSeverityWarning
         range: string
         allowMultiple: true
+        reference: [shapeValidationNode, queryValidationNode,functionValidationNode]
       disabled:
         propertyTerm: validation.disableValidation
         range: string
         allowMultiple: true
+        reference: [shapeValidationNode, queryValidationNode,functionValidationNode]
       validations:
         propertyTerm: validation.validations
         asMap: true

@@ -37,7 +37,7 @@
     "url": "https://github.com/raml-org/raml-definition-system/issues"
   },
   "devDependencies": {
-    "typescript": "1.8.9",
+    "typescript": "2.1.1",
     "typings": "^0.7.9",
     "dev-env-installer": "0.0.5",
     "json-loader": "^0.5.1",

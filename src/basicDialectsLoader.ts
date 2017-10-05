@@ -75,11 +75,18 @@ class DialectCreator{
                 if (pr.asMap){
                     actualProp.withMultiValue(true);
                 }
+                if (pr.enum){
+                    actualProp.withEnumOptions(pr.enum);
+                }
                 actualProp.unmerge();
             })
         })
         let name="#%"+d.dialect+" "+d.version;
         this.u.setTopLevel(d.raml.document.encodes);
+        this.u.registerSuperClass(this.types[d.raml.document.encodes],this.u.type("FragmentDeclaration"))
+        this.u.setTypedVersion("1.0")
+        this.u.setUniverseVersion("RAML10")
+
         ds.registerUniverse(name,this.u);
     }
 
